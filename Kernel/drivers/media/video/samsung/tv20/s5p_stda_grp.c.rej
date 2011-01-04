@@ -1,0 +1,12 @@
+--- drivers/media/video/samsung/tv20/s5p_stda_grp.c	2010-12-20 12:00:57.000000000 +0800
++++ drivers/media/video/samsung/tv20/s5p_stda_grp.c	2010-12-03 01:21:13.000000000 +0800
+@@ -610,8 +610,7 @@
+ #endif
+ 	}
+ 
+-	((struct fb_var_screeninfo) (s5ptv_status.fb->var)).bits_per_pixel =
+-		((struct fb_var_screeninfo) (fb->var)).bits_per_pixel;
++	(s5ptv_status.fb->var).bits_per_pixel = ((struct fb_var_screeninfo) (fb->var)).bits_per_pixel;
+ 
+ 	s5ptvfb_set_display_mode(&s5ptv_status);
+ 

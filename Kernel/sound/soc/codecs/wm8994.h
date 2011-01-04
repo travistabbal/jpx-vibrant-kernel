@@ -141,6 +141,7 @@ extern unsigned int gbAudioLogEnable;		// This variable must be defined in cpufr
 
 // Definitions of function prototype.
 inline unsigned int wm8994_read(struct snd_soc_codec *codec,unsigned int reg);
+//unsigned int wm8994_read(struct snd_soc_codec *codec,unsigned int reg);
 int wm8994_write(struct snd_soc_codec *codec, unsigned int reg, unsigned int value);
 void wm8994_shutdown(struct snd_pcm_substream *substream, struct snd_soc_dai *codec_dai);
 int audio_init(void);
