@@ -1,0 +1,41 @@
+--- Makefile	2010-12-20 12:00:48.000000000 +0800
++++ Makefile	2011-01-04 02:49:33.000000000 +0800
+@@ -181,8 +181,9 @@
+ # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
+ export KBUILD_BUILDHOST := $(SUBARCH)
+ ARCH		?= arm
+-CROSS_COMPILE	?= /opt/toolchains/arm-2009q3/bin/arm-none-linux-gnueabi-
+-
++#CROSS_COMPILE	?= /home/kernel/arm-2009q3/bin/arm-none-eabi-
++#CROSS_COMPILE	?= /home/kernel/arm-2010q1/bin/arm-none-eabi-
++CROSS_COMPILE	?= /home/kernel/arm-2010.09/bin/arm-none-eabi-
+ 
+ # Architecture as present in compile.h
+ UTS_MACHINE 	:= $(ARCH)
+@@ -346,7 +347,16 @@
+ 		   -fno-strict-aliasing -fno-common \
+ 		   -Werror-implicit-function-declaration \
+ 		   -Wno-format-security \
+-		   -fno-delete-null-pointer-checks
++		   -fno-delete-null-pointer-checks \
++			 -mcpu=cortex-a8 \
++			 -mfpu=neon -mfloat-abi=softfp \
++			 -mthumb
++			 #-fno-gcse -fprefetch-loop-arrays \
++			 #--param l2-cache-size=512 \
++			 #--param l1-cache-size=64 \
++			 #--param simultaneous-prefetches=6 \
++			 #--param prefetch-latency=400 \
++			 #--param l1-cache-line-size=64
+ KBUILD_AFLAGS   := -D__ASSEMBLY__
+ 
+ # Read KERNELRELEASE from include/config/kernel.release (if it exists)
+@@ -559,7 +569,7 @@
+ endif
+ 
+ # arch Makefile may override CC so keep this after arch Makefile is included
+-NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
++NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include) -Dlinux
+ CHECKFLAGS     += $(NOSTDINC_FLAGS)
+ 
+ # warn about C99 declaration after statement

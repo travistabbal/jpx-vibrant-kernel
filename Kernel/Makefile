@@ -349,7 +349,8 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks \
 			 -mcpu=cortex-a8 \
-			 -mfpu=neon -mfloat-abi=softfp #\
+			 -mfpu=neon -mfloat-abi=softfp \
+			 -mthumb
 			 #-fno-gcse -fprefetch-loop-arrays \
 			 #--param l2-cache-size=512 \
 			 #--param l1-cache-size=64 \

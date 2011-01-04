@@ -1,0 +1,14 @@
+--- drivers/media/video/samsung/tv20/s5p_tv_base.c	2010-12-20 12:00:57.000000000 +0800
++++ drivers/media/video/samsung/tv20/s5p_tv_base.c	2010-12-31 06:01:59.000000000 +0800
+@@ -1090,7 +1090,11 @@
+ #ifdef CONFIG_HDMI_HPD
+     s5ptv_status.hpd_status= s5p_hpd_get_state();
+ #else
++#if defined(CONFIG_GALAXY_I897)
++    s5ptv_status.hpd_status=0;
++#else
+     s5ptv_status.hpd_status= 1;//0;
++#endif
+ #endif    
+ #endif
+ 	dev_info(&pdev->dev, "hpd status is cable %s\n", 
