@@ -66,6 +66,7 @@ void update_hpvol()
 
 void update_fm_radio_headset_restore_bass()
 {
+
 	if (fm_radio_headset_restore_bass)
 	{
 		// disable Sidetone high-pass filter designed for voice and not FM radio
@@ -77,10 +78,14 @@ void update_fm_radio_headset_restore_bass()
 	}
 	else
 	{
+		// soft-mute this DAC
+		wm8994_write(codec_, WM8994_AIF2_DAC_FILTERS_1, 0x236);
+		msleep(180);
 		// default settings in GT-I9000 Froyo XXJPX kernel sources
-		// TODO: antipopo
 		wm8994_write(codec_, WM8994_SIDETONE, 0x01c0);
 		wm8994_write(codec_, WM8994_AIF2_ADC_FILTERS, 0xF800);
+		// un-mute
+		wm8994_write(codec_, WM8994_AIF2_DAC_FILTERS_1, 0x036);
 	}
 }
 
