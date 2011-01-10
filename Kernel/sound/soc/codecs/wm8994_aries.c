@@ -58,8 +58,8 @@
 #define TUNING_MP3_OUTPUTL_VOL		0x31            // 1Ch [0x2F -> 0x31] LATONA1 HW request
 #define TUNING_MP3_OUTPUTR_VOL 	        0x31            // 1Dh [0x2F -> 0x31] LATONA1 HW request
 #else
-#define TUNING_MP3_OUTPUTL_VOL		0x2F            // 1Ch 
-#define TUNING_MP3_OUTPUTR_VOL 	        0x2F            // 1Dh 
+#define TUNING_MP3_OUTPUTL_VOL		0x34 //0x2F            // 1Ch 
+#define TUNING_MP3_OUTPUTR_VOL 	        0x34 //0x2F            // 1Dh 
 #endif  //CONFIG_ARIES_LATONA
 #define TUNING_MP3_OPGAL_VOL		0x39		// 20h
 #define TUNING_MP3_OPGAR_VOL		0x39		// 21h
@@ -114,7 +114,7 @@
 #if defined(CONFIG_ARIES_LATONA)
 #define TUNING_CALL_RCV_INPUTMIX_VOL	0x0E		// 18h //[0x16 -> 0x0E] LATONA1 HW request (10/7)
 #else
-#define TUNING_CALL_RCV_INPUTMIX_VOL	0x16		// 18h
+#define TUNING_CALL_RCV_INPUTMIX_VOL	0x12 //0x16		// 18h
 #endif  //CONFIG_ARIES_LATONA
 #define TUNING_CALL_RCV_MIXER_VOL	WM8994_IN1L_MIXINL_VOL	// 29h 30dB
 
@@ -190,7 +190,7 @@
 #if defined(CONFIG_ARIES_LATONA)
 #define TUNING_RECORD_MAIN_INPUTLINE_VOL	0x19		// 18h   //[0x18 -> 0x19] LATONA1 HW request (10/7)
 #else
-#define TUNING_RECORD_MAIN_INPUTLINE_VOL	0x18		// 18h
+#define TUNING_RECORD_MAIN_INPUTLINE_VOL	0x12 //0x18		// 18h
 #endif  //CONFIG_ARIES_LATONA
 #define TUNING_RECORD_MAIN_AIF1ADCL_VOL	0xC0		// 400h
 #define TUNING_RECORD_MAIN_AIF1ADCR_VOL	0xC0		// 401h
@@ -208,7 +208,6 @@
 #define TUNING_RECOGNITION_SUB_AIF1ADCL_VOL	0xC0		// 400h
 #define TUNING_RECOGNITION_SUB_AIF1ADCR_VOL	0xC0		// 401
 //------------------------------------------------
-
 
 //------------------------------------------------
 // Definition external function prototype.

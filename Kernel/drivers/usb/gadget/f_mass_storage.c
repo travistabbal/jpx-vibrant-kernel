@@ -96,7 +96,7 @@
 #define DRIVER_NAME		"usb_mass_storage"
 #define MAX_LUNS		8
 
-#define UMS_DISK_LUNS	2
+#define UMS_DISK_LUNS	3
 //#define _ENABLE_CDFS_
 #ifdef _ENABLE_CDFS_
 #define UMS_CDROM_LUNS	1

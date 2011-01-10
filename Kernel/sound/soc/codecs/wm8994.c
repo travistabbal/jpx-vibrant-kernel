@@ -228,7 +228,8 @@ int wm8994_write(struct snd_soc_codec *codec, unsigned int reg, unsigned int val
 	return -EIO;
 }
 
-inline unsigned int wm8994_read(struct snd_soc_codec *codec, unsigned int reg)
+//inline unsigned int wm8994_read(struct snd_soc_codec *codec, unsigned int reg)
+unsigned int wm8994_read(struct snd_soc_codec *codec, unsigned int reg)
 {
 	return wm8994_read_hw(codec, reg); 
 }
