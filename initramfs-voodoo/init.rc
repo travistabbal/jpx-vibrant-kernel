@@ -198,6 +198,9 @@ loglevel 3
     mkdir /dbdata/system
     chown system system /dbdata/system
     chmod 0775 /dbdata/system  
+    mkdir /dbdata/db-journal
+    chown system system /dbdata/db-journal
+    chmod 0777 /dbdata/db-journal
 
     # Create dump dir and collect dumps.
     # Do this before we mount cache so eventually we can use cache for
@@ -463,8 +466,7 @@ on boot
     chown system system /dev/proximity
     chmod 0777 /dev/proximity
     chmod 0777 /dev/accelerometer
-   chmod 0777 /dev/tty_miscdev
-   chmod 0777 /dev/audience_miscdev
+   chmod 0777 /dev/hac_miscdev
 
 
 # Define TCP buffer sizes for various networks
@@ -521,8 +523,10 @@ on boot
     class_start default
 # +++++++++++++++++++++++++++++++++++++++++++++
 # NAGSM_ANDROID_FRWK_JUSTIN_20101013 TMO LogMeIn
-    chmod 0644 /sys/bin/RescueServer
-    chmod 0644 /sys/bin/RescueStarter
+    chmod 0755 /sys/bin/RescueServer
+    chmod 0755 /sys/bin/RescueStarter
+    chown nobody.shell /system/bin/RescueServer
+    chown nobody.shell /system/bin/RescueStarter
 
 ## Daemon processes to be run by init.
 ##
@@ -531,14 +535,8 @@ service console /system/bin/sh
     group shell system log
     console
 
-service sombionixInit /system/bin/sombionixInit
+service noplaylogos /system/bin/false
     user root
-    oneshot
-	
-service bootanim /system/bin/bootanimation
-    user graphics
-    group graphics
-    disabled
     oneshot
 
 # adbd is controlled by the persist.service.adb.enable system property
@@ -622,6 +620,12 @@ service killmediaserver /system/bin/killmediaserver
     group system
     oneshot
 #to prevent lockup issue during poweron/off test
+
+#service bootanim /system/bin/bootanimation
+#    user graphics
+#    group graphics
+#    disabled
+#    oneshot
 
 service wpa_supplicant /system/bin/wpa_supplicant -Dwext -ieth0 -c/data/wifi/bcm_supp.conf
    disabled
@@ -761,9 +765,16 @@ service dumpstate /system/bin/dumpstate -s
 # +++++++++++++++++++++++++++++++++++++++++++++
 # NAGSM_ANDROID_FRWK_JUSTIN_20101013 TMO LogMeIn
 service RescueStarter /system/bin/RescueStarter
-    user RescueStarter
-    group RescueStarter
+    user nobody
+    group input graphics
     oneshot
+
 service run_parts /voodoo/scripts/run-parts.sh /system/etc/init.d
   oneshot 
 
+
+service bootanim /system/bin/bootanimation
+			user graphics
+			group graphics
+			disabled
+			oneshot
