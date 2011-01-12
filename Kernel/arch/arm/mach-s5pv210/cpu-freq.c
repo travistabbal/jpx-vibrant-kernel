@@ -130,21 +130,23 @@ static struct cpufreq_frequency_table *s5pc110_freq_table[] = {
 };
 
 static unsigned int s5pc110_thres_table_1GHZ[][2] = {
-      	{5, 10},
-        {5, 10},
-        {5, 10},
-        {5, 10},
-        {5, 10},
+      	{5, 20},
+        {5, 20},
+        {5, 20},
+        {5, 20},
+        {5, 20},
+        {5, 20},
 };
 
 static unsigned int s5pc110_thres_table_1d2GHZ[][2] = {
-      	{5, 10},
-        {5, 10},
-        {5, 10},
-        {5, 10},
-        {5, 10},
-        {5, 10},
+      	{5, 20},
+        {5, 20},
+        {5, 20},
+        {5, 20},
+        {5, 20},
+        {5, 20},
 };
+
 
 static unsigned int  (*s5pc110_thres_table[2])[2] = {
 	s5pc110_thres_table_1GHZ,
