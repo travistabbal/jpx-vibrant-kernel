@@ -27,9 +27,11 @@
 #define VOODOO_SOUND_VERSION 1
 
 
-unsigned short hplvol = CONFIG_SND_VOODOO_HPVOL;
-unsigned short hprvol = CONFIG_SND_VOODOO_HPVOL;
+#ifdef CONFIG_SND_VOODOO_HP_LEVEL_CONTROL
+unsigned short hplvol = CONFIG_SND_VOODOO_HP_LEVEL;
+unsigned short hprvol = CONFIG_SND_VOODOO_HP_LEVEL;
 bool hpvol_force = true;
+#endif
 
 bool fm_radio_headset_restore_bass = true;
 
@@ -37,7 +39,7 @@ bool fm_radio_headset_restore_bass = true;
 struct snd_soc_codec *codec_;
 
 
-
+#ifdef CONFIG_SND_VOODOO_HP_LEVEL_CONTROL
 void update_hpvol()
 {
 	unsigned short val;
@@ -62,8 +64,9 @@ void update_hpvol()
 
 	hpvol_force = true;
 }
+#endif
 
-
+#ifdef CONFIG_SND_VOODOO_FM
 void update_fm_radio_headset_restore_bass(bool with_mute)
 {
 	if (with_mute)
@@ -92,7 +95,7 @@ void update_fm_radio_headset_restore_bass(bool with_mute)
 	if (with_mute)
 		wm8994_write(codec_, WM8994_AIF2_DAC_FILTERS_1, 0x036);
 }
-
+#endif
 
 
 /*
@@ -100,7 +103,7 @@ void update_fm_radio_headset_restore_bass(bool with_mute)
  * Declaring the controling misc devices
  *
  */
-
+#ifdef CONFIG_SND_VOODOO_HP_LEVEL_CONTROL
 static ssize_t headphone_amplifier_level_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	// output median of left and right headphone amplifier volumes
@@ -118,7 +121,7 @@ static ssize_t headphone_amplifier_level_store(struct device *dev, struct device
 	}
 	return size;
 }
-
+#endif
 
 #ifdef CONFIG_SND_VOODOO_FM
 static ssize_t fm_radio_headset_restore_bass_show(struct device *dev, struct device_attribute *attr, char *buf)
@@ -215,8 +218,9 @@ static ssize_t voodoo_sound_version(struct device *dev, struct device_attribute 
 	return sprintf(buf, "%u\n", VOODOO_SOUND_VERSION);
 }
 
-
+#ifdef CONFIG_SND_VOODOO_HP_LEVEL_CONTROL
 static DEVICE_ATTR(headphone_amplifier_level, S_IRUGO | S_IWUGO , headphone_amplifier_level_show, headphone_amplifier_level_store);
+#endif
 #ifdef CONFIG_SND_VOODOO_FM
 static DEVICE_ATTR(fm_radio_headset_restore_bass, S_IRUGO | S_IWUGO , fm_radio_headset_restore_bass_show, fm_radio_headset_restore_bass_store);
 #endif
@@ -227,7 +231,9 @@ static DEVICE_ATTR(wm8994_write, S_IWUSR , NULL, store_wm8994_write);
 static DEVICE_ATTR(version, S_IRUGO , voodoo_sound_version, NULL);
 
 static struct attribute *voodoo_sound_attributes[] = {
+#ifdef CONFIG_SND_VOODOO_HP_LEVEL_CONTROL
 		&dev_attr_headphone_amplifier_level.attr,
+#endif
 #ifdef CONFIG_SND_VOODOO_FM
 		&dev_attr_fm_radio_headset_restore_bass.attr,
 #endif
@@ -255,22 +261,22 @@ static struct miscdevice voodoo_sound_device = {
  *
  */
 
+#ifdef CONFIG_SND_VOODOO_FM
 void voodoo_hook_fmradio_headset()
 {
-#ifdef CONFIG_SND_VOODOO_FM
 	if (! fm_radio_headset_restore_bass)
 		return;
 
 	printk("Voodoo sound: correct FM radio sound output\n");
 	update_fm_radio_headset_restore_bass(false);
-#endif
 }
+#endif
 
 
 unsigned int voodoo_hook_wm8994_write(struct snd_soc_codec *codec, unsigned int reg, unsigned int value)
 {
 	// modify some registers before those being written to the codec
-
+#ifdef CONFIG_SND_VOODOO_HP_LEVEL_CONTROL
 	// sniff headphone amplifier level changes and apply our level instead
 	if (hpvol_force)
 	{
@@ -279,6 +285,7 @@ unsigned int voodoo_hook_wm8994_write(struct snd_soc_codec *codec, unsigned int 
 		if (reg == WM8994_RIGHT_OUTPUT_VOLUME)
 			value = (WM8994_HPOUT1_VU | WM8994_HPOUT1R_MUTE_N | hprvol);
 	}
+#endif
 
 #ifdef CONFIG_SND_VOODOO_DEBUG
 	// log every write to dmesg

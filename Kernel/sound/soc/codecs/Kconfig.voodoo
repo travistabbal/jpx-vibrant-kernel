@@ -6,13 +6,22 @@ config SND_VOODOO
 	  With this option enabled, the kernel compile an additionnal driver
 	  that extend the existing sound driver
 
-config SND_VOODOO_HPVOL
-	int "Default headphone amplifier level: 0-62"
+config SND_VOODOO_HP_LEVEL_CONTROL
+	bool "Add headphone amplifier level control"
 	depends on SND_VOODOO && SND_ARIES_SOC_WM8994
+	default y
+	help
+	  Adds a control allowing to adjust the analog gain of the headphone
+	  amplifier
+
+config SND_VOODOO_HP_LEVEL
+	int "default level at boot 0-62"
+	depends on SND_VOODOO_HP_LEVEL_CONTROL
 	default 47
 	range 0 62
 	help
-	  Adds a control to enable or disable the high-pass filter on FM radio
+	  Default headphone amplifier level. Take care not setting it to high,
+	  it would introduce hiss for people not using the control app
 
 config SND_VOODOO_FM
 	bool "FM radio: restore a normal frequency response"
