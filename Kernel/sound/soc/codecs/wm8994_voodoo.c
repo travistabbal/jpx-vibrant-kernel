@@ -205,10 +205,15 @@ static ssize_t show_wm8994_register_dump(struct device *dev, struct device_attri
 
 static ssize_t store_wm8994_write(struct device *dev, struct device_attribute *attr, const char *buf, size_t size)
 {
-	short unsigned int reg = 0x0;
-	short unsigned int val = 0x0;
-	if (sscanf(buf, "%hx %hx", &reg, &val) == 2)
+	short unsigned int reg = 0;
+	short unsigned int val = 0;
+	int unsigned bytes_read = 0;
+
+	while (sscanf(buf, "%hx %hx%n", &reg, &val, &bytes_read) == 2)
+	{
+		buf += bytes_read;
 		wm8994_write(codec_, reg, val);
+	}
 	return size;
 }
 #endif
