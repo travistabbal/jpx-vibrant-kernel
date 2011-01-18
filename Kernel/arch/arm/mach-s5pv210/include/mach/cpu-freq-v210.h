@@ -32,6 +32,8 @@ enum perf_level {
 	L5,
 	L6,
 	L7,
+	L8,
+	L9,
 };
 
 enum freq_level_states {
