@@ -1,0 +1,16 @@
+#!/system/bin/sh
+#
+# load user scripts
+rm /system/user.log
+exec >>/system/user.log
+exec 2>&1
+echo $(date) USER INIT START
+if cd /system/etc/init.d >/dev/null 2>&1 ; then
+    for file in S* ; do
+        if ! ls "$file" >/dev/null 2>&1 ; then continue ; fi
+        echo "START '$file'"
+        /system/bin/sh "$file"
+        echo "EXIT '$file' ($?)"
+    done
+fi
+echo $(date) USER INIT DONE
