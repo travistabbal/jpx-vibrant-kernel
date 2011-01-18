@@ -57,7 +57,7 @@ Melfas touchkey register
 #define DEVICE_NAME "melfas-touchkey"
 
 static int touchkey_keycode[5] =
-    { NULL, KEY_BACK, KEY_MENU, KEY_ENTER, KEY_END };
+    { NULL, KEY_BACK, KEY_ENTER, KEY_MENU, KEY_END };
 
 static int touchkey_enable = 0;
 
