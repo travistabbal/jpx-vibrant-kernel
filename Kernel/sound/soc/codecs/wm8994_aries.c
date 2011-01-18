@@ -20,6 +20,7 @@
 #include <mach/regs-clock.h> 
 #include <mach/gpio.h> 
 #include "wm8994.h"
+#include "wm8994_voodoo.h"
 
 //------------------------------------------------
 //		Debug Feature
@@ -51,15 +52,15 @@
 // Normal
 // Speaker
 #define TUNING_MP3_SPKL_VOL		0x3E		// 26h
-#define TUNING_MP3_CLASSD_VOL		0x5		// 25h
+#define TUNING_MP3_CLASSD_VOL		0x06 //0x5		// 25h //boost speaker volume
 
 // Headset
 #if defined(CONFIG_ARIES_LATONA)
 #define TUNING_MP3_OUTPUTL_VOL		0x31            // 1Ch [0x2F -> 0x31] LATONA1 HW request
 #define TUNING_MP3_OUTPUTR_VOL 	        0x31            // 1Dh [0x2F -> 0x31] LATONA1 HW request
 #else
-#define TUNING_MP3_OUTPUTL_VOL		0x2F            // 1Ch 
-#define TUNING_MP3_OUTPUTR_VOL 	        0x2F            // 1Dh 
+#define TUNING_MP3_OUTPUTL_VOL		0x32 //0x2F            // 1Ch //boost headphone out for media playback
+#define TUNING_MP3_OUTPUTR_VOL		0x32 //0x2F            // 1Dh 
 #endif  //CONFIG_ARIES_LATONA
 #define TUNING_MP3_OPGAL_VOL		0x39		// 20h
 #define TUNING_MP3_OPGAR_VOL		0x39		// 21h
@@ -94,7 +95,7 @@
 //------------------------------------------------
 // Call
 // Speaker
-#define TUNING_CALL_SPKL_VOL		0x3E		// 26h
+#define TUNING_CALL_SPKL_VOL		0x3E		// 26h //turn speakerphone volume down a bit
 #define TUNING_CALL_CLASSD_VOL		0x7		// 25h
 
 // Headset
@@ -106,15 +107,15 @@
 // Receiver
 #define TUNING_RCV_OUTMIX5_VOL		0x0		// 31h
 #define TUNING_RCV_OUTMIX6_VOL 		0x0		// 32h
-#define TUNING_RCV_OPGAL_VOL		0x3D		// 20h
-#define TUNING_RCV_OPGAR_VOL		0x3D		// 21h
+#define TUNING_RCV_OPGAL_VOL		0x3E //0x3D		// 20h //boost earpiece volume during calls
+#define TUNING_RCV_OPGAR_VOL		0x3E //0x3D		// 21h
 #define TUNING_HPOUT2_VOL		0x0		// 1Fh
 
 // Call Main MIC
 #if defined(CONFIG_ARIES_LATONA)
 #define TUNING_CALL_RCV_INPUTMIX_VOL	0x0E		// 18h //[0x16 -> 0x0E] LATONA1 HW request (10/7)
 #else
-#define TUNING_CALL_RCV_INPUTMIX_VOL	0x16		// 18h
+#define TUNING_CALL_RCV_INPUTMIX_VOL	0x12 //0x16		// 18h //reduce mic level during calls to fix distortion
 #endif  //CONFIG_ARIES_LATONA
 #define TUNING_CALL_RCV_MIXER_VOL	WM8994_IN1L_MIXINL_VOL	// 29h 30dB
 
@@ -122,7 +123,7 @@
 #define TUNING_CALL_SPK_MIXER_VOL	WM8994_IN1L_MIXINL_VOL		// 29h 0dB
 
 // Call Ear MIC
-#define TUNING_CALL_EAR_INPUTMIX_VOL	0x1D		// 1Ah
+#define TUNING_CALL_EAR_INPUTMIX_VOL	0x1A //0x1D		// 1Ah
 
 //------------------------------------------------
 // VoIP Call
@@ -135,8 +136,8 @@
 // Headset(3pole/4pole)
 #define TUNING_VOIP_EAR_OUTPUTL_VOL             0x35 // 1Ch // [DJ05-2239] VoIP 0x38->0x35 (-4dB)
 #define TUNING_VOIP_EAR_OUTPUTR_VOL             0x35 // 1Dh // [DJ05-2239] VoIP 0x38->0x35 (-4dB)
-#define TUNING_VOIP_EAR_OPGAL_VOL               0x3F // 20h // [DI25-1834] VoIP 0x3F (+6dB)
-#define TUNING_VOIP_EAR_OPGAR_VOL               0x3F // 21h // [DI25-1834] VoIP 0x3F (+ddB)
+#define TUNING_VOIP_EAR_OPGAL_VOL               0x3E //0x3F // 20h // [DI25-1834] VoIP 0x3F (+6dB)
+#define TUNING_VOIP_EAR_OPGAR_VOL               0x3E //0x3F // 21h // [DI25-1834] VoIP 0x3F (+ddB)
 #define TUNING_VOIP_EAR_AIF1DAC_BOOST           0x01 // 301h // [DJ05-2239] VoIP 0x01 (+6dB)
 
 // Speaker
@@ -190,7 +191,7 @@
 #if defined(CONFIG_ARIES_LATONA)
 #define TUNING_RECORD_MAIN_INPUTLINE_VOL	0x19		// 18h   //[0x18 -> 0x19] LATONA1 HW request (10/7)
 #else
-#define TUNING_RECORD_MAIN_INPUTLINE_VOL	0x18		// 18h
+#define TUNING_RECORD_MAIN_INPUTLINE_VOL	0x12 //0x18		// 18h //reduce mic level during recording to fix distortion
 #endif  //CONFIG_ARIES_LATONA
 #define TUNING_RECORD_MAIN_AIF1ADCL_VOL	0xC0		// 400h
 #define TUNING_RECORD_MAIN_AIF1ADCR_VOL	0xC0		// 401h
@@ -208,7 +209,6 @@
 #define TUNING_RECOGNITION_SUB_AIF1ADCL_VOL	0xC0		// 400h
 #define TUNING_RECOGNITION_SUB_AIF1ADCR_VOL	0xC0		// 401
 //------------------------------------------------
-
 
 //------------------------------------------------
 // Definition external function prototype.
@@ -3775,14 +3775,14 @@ void wm8994_set_fmradio_common(struct snd_soc_codec *codec, int onoff)
 		}
 		
 		//DRC for Noise-gate (AIF2)
-		wm8994_write(codec, WM8994_AIF2_ADC_FILTERS, 0xF800);
+		/*wm8994_write(codec, WM8994_AIF2_ADC_FILTERS, 0xF800);
 		wm8994_write(codec, WM8994_AIF2_DAC_FILTERS_1, 0x0036);
 		wm8994_write(codec, WM8994_AIF2_DAC_FILTERS_2, 0x0010);
 		wm8994_write(codec, WM8994_AIF2_DRC_2, 0x0840);
 		wm8994_write(codec, WM8994_AIF2_DRC_3, 0x2400);
 		wm8994_write(codec, WM8994_AIF2_DRC_4, 0x0000);
 		wm8994_write(codec, WM8994_AIF2_DRC_5, 0x0000);
-		wm8994_write(codec, WM8994_AIF2_DRC_1, 0x019C);
+		wm8994_write(codec, WM8994_AIF2_DRC_1, 0x019C);*/
 	}
 	else
 	{		
@@ -4064,6 +4064,10 @@ void wm8994_set_fmradio_headset(struct snd_soc_codec *codec)
 
 	//DAC1 Unmute
 	wm8994_write(codec, WM8994_AIF1_DAC1_FILTERS_1, 0x0000);
+
+#ifdef CONFIG_SND_VOODOO
+	voodoo_hook_fmradio_headset();
+#endif
 
 	val = wm8994_read(codec, WM8994_AIF2_DAC_FILTERS_1);	//520 : 0
 	val &= ~(WM8994_AIF2DAC_MUTE_MASK);
@@ -4475,11 +4479,11 @@ void wm8994_set_fmradio_speaker_headset_mix(struct snd_soc_codec *codec)
 	wm8994_write(codec, WM8994_DAC2_RIGHT_MIXER_ROUTING, val);
 	
 	//DRC for Noise-gate (AIF2)
-	wm8994_write(codec, 0x541, 0x0850);
+	/*wm8994_write(codec, 0x541, 0x0850);
 	wm8994_write(codec, 0x542, 0x0800);
 	wm8994_write(codec, 0x543, 0x0001);
 	wm8994_write(codec, 0x544, 0x0008);
-	wm8994_write(codec, 0x540, 0x01BC);
+	wm8994_write(codec, 0x540, 0x01BC);*/
 
 	//DAC1 Setting
 	val = wm8994_read(codec, WM8994_DAC1_LEFT_MIXER_ROUTING);	//601H : 0x05

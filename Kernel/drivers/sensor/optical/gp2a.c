@@ -331,13 +331,16 @@ static void gp2a_work_func_light(struct work_struct *work)
 	gprintk("Optimized adc = %d \n",adc);
 	gprintk("cur_state = %d\n",cur_state);
 	gprintk("light_enable = %d\n",light_enable);
+	
+	//printk("Optimized adc = %d , cur_state = %d\n",adc,cur_state); //debug only, remove later
+	
 #if 1 //add 150lux
-	if(adc >= 2100)
+	if(adc >= 1800) //if(adc >= 2100)
 	{
 		level_state = LIGHT_LEVEL5;
 		buffering = 5;
 	}
-	else if(adc >= 1900 && adc < 2100)
+	else if(adc >= 1600 && adc < 1800) //else if(adc >= 1900 && adc < 2100)
 	{
 		if(buffering == 5)
 		{	
@@ -351,13 +354,13 @@ static void gp2a_work_func_light(struct work_struct *work)
 		}
 	}
 
-	else if(adc >= 1800 && adc < 1900)
+	else if(adc >= 1200 && adc < 1600) //else if(adc >= 1800 && adc < 1900)
 	{
 		level_state = LIGHT_LEVEL4;
 		buffering = 4;
 	}
 
-	else if(adc >= 1200 && adc < 1800)
+	else if(adc >= 1000 && adc < 1200) //else if(adc >= 1200 && adc < 1800)
 	{
 		if((buffering == 4)||(buffering == 5))
 		{	
@@ -371,13 +374,13 @@ static void gp2a_work_func_light(struct work_struct *work)
 		}
 	}
 	
-	else if(adc >= 800 && adc < 1200)
+	else if(adc >= 700 && adc < 1000) //else if(adc >= 800 && adc < 1200)
 	{
 		level_state = LIGHT_LEVEL3;
 		buffering = 3;
 	}
 
-	else if(adc >= 600 && adc < 800)
+	else if(adc >= 500 && adc < 700) //else if(adc >= 600 && adc < 800)
 	{
 		if((buffering == 3)||(buffering == 4)||(buffering == 5))
 		{	
@@ -391,13 +394,13 @@ static void gp2a_work_func_light(struct work_struct *work)
 		}
 	}
 
-	else if(adc >= 400 && adc < 600)
+	else if(adc >= 80 && adc < 500) //80-500 //else if(adc >= 400 && adc < 600)
 	{
 		level_state = LIGHT_LEVEL2;
 		buffering = 2;
 	}
 	
-	else if(adc >= 250 && adc < 400)
+	else if(adc >= 60 && adc < 80) //50-80 //else if(adc >= 250 && adc < 400)
 	{
 		if((buffering == 2)||(buffering == 3)||(buffering == 4)||(buffering == 5))
 		{	
@@ -411,7 +414,7 @@ static void gp2a_work_func_light(struct work_struct *work)
 		}
 	}
 
-	else if(adc < 250)
+	else if(adc < 60) //50 //else if(adc < 250)
 	{
 		level_state = LIGHT_LEVEL1;
 		buffering = 1;
@@ -622,7 +625,7 @@ static enum hrtimer_restart gp2a_timer_func(struct hrtimer *timer)
 	queue_work(gp2a_wq, &gp2a->work_light);
 	//hrtimer_start(&gp2a->timer,ktime_set(LIGHT_PERIOD,0),HRTIMER_MODE_REL);
 	light_polling_time = ktime_set(0,0);
-	light_polling_time = ktime_add_us(light_polling_time,500000);
+	light_polling_time = ktime_add_us(light_polling_time,1200000);
 	hrtimer_start(&gp2a->timer,light_polling_time,HRTIMER_MODE_REL);
 	return HRTIMER_NORESTART;
 }
@@ -894,7 +897,7 @@ void gp2a_on(struct gp2a_data *gp2a, int type)
 	{
 		gprintk(KERN_INFO "[LIGHT_SENSOR] timer start for light sensor\n");
 		light_polling_time = ktime_set(0,0);
-		light_polling_time = ktime_add_us(light_polling_time,500000);
+		light_polling_time = ktime_add_us(light_polling_time,1200000);
 	    //hrtimer_start(&gp2a->timer,ktime_set(LIGHT_PERIOD,0),HRTIMER_MODE_REL);
 	    hrtimer_start(&gp2a->timer,light_polling_time,HRTIMER_MODE_REL);
 		light_enable = ON;
@@ -1369,7 +1372,7 @@ static int gp2a_opt_resume( struct platform_device* pdev )
 		#if 0
 		gprintk("[%s] : hrtimer_start \n",__func__);
 	       light_polling_time = ktime_set(0,0);
-		light_polling_time = ktime_add_us(light_polling_time,500000);
+		light_polling_time = ktime_add_us(light_polling_time,1200000);
 		hrtimer_start(&gp2a->timer,light_polling_time,HRTIMER_MODE_REL);
 		#endif
 	}
