@@ -1197,11 +1197,103 @@ const unsigned short s6e63m0_22gamma_30cd[] = {
 	ENDDEF, 0x0000                              
 }; 
 
+const unsigned short s6e63m0_22gamma_20cd[] = { 
+	//gamma set
+	0x0FA,
+	
+	0x102,
+	
+	0x118,
+	0x108,
+	0x124,
+	0x1A1,
+	0x151,
+	0x17B,
+	0x1CE,
+	0x1CB,
+	0x1C2,
+	0x1C7,
+	0x1CB,
+	0x1BC,
+	0x1DA,
+	0x1DD,
+	0x1D3,
+	0x100,
+	0x14B, //gain R
+	0x100,
+	0x14A, //gain G
+	0x100,
+	0x164, //gain B	                                      
+
+	ENDDEF, 0x0000                              
+}; 
+
+const unsigned short s6e63m0_22gamma_10cd[] = { 
+	//gamma set
+	0x0FA,
+	
+	0x102,
+	
+	0x118,
+	0x108,
+	0x124,
+	0x1A1,
+	0x151,
+	0x17B,
+	0x1CE,
+	0x1CB,
+	0x1C2,
+	0x1C7,
+	0x1CB,
+	0x1BC,
+	0x1DA,
+	0x1DD,
+	0x1D3,
+	0x100,
+	0x143, //gain R
+	0x100,
+	0x142, //gain G
+	0x100,
+	0x159, //gain B	                                      
+
+	ENDDEF, 0x0000                              
+}; 
+
+const unsigned short s6e63m0_22gamma_00cd[] = { 
+	//gamma set
+	0x0FA,
+	
+	0x102,
+	
+	0x118,
+	0x108,
+	0x124,
+	0x1A1,
+	0x151,
+	0x17B,
+	0x1CE,
+	0x1CB,
+	0x1C2,
+	0x1C7,
+	0x1CB,
+	0x1BC,
+	0x1DA,
+	0x1DD,
+	0x1D3,
+	0x100,
+	0x13B, //gain R
+	0x100,
+	0x13A, //gain G
+	0x100,
+	0x14E, //gain B	                                      
+
+	ENDDEF, 0x0000                              
+}; 
 
 #if !defined(CONFIG_ARIES_NTT)
 const unsigned short *p22Gamma_set[] = {        
                                                 
-	s6e63m0_22gamma_30cd,//0                               
+/*	s6e63m0_22gamma_30cd,//0                               
 	s6e63m0_22gamma_40cd,                         
 	s6e63m0_22gamma_70cd,                         
 	s6e63m0_22gamma_90cd,                         
@@ -1226,6 +1318,32 @@ const unsigned short *p22Gamma_set[] = {
 	s6e63m0_22gamma_280cd,                        
 	s6e63m0_22gamma_290cd,                        
 	s6e63m0_22gamma_300cd,//24                    
+	*/
+	s6e63m0_22gamma_00cd,	 //0                    
+	s6e63m0_22gamma_10cd,    //auto level1 //manual min
+	s6e63m0_22gamma_10cd,
+	s6e63m0_22gamma_20cd,
+	s6e63m0_22gamma_30cd,	
+	s6e63m0_22gamma_40cd,	//5 //auto level2
+	s6e63m0_22gamma_50cd,
+	s6e63m0_22gamma_60cd,
+	s6e63m0_22gamma_70cd,	//manual medium
+	s6e63m0_22gamma_80cd,	
+	s6e63m0_22gamma_90cd,	//10 //auto level3
+	s6e63m0_22gamma_100cd,
+	s6e63m0_22gamma_120cd,
+	s6e63m0_22gamma_140cd,	
+	s6e63m0_22gamma_160cd,	
+	s6e63m0_22gamma_180cd,	//15
+	s6e63m0_22gamma_200cd,  //auto level4
+	s6e63m0_22gamma_210cd,
+	s6e63m0_22gamma_220cd,	
+	s6e63m0_22gamma_230cd,	
+	s6e63m0_22gamma_240cd,	//20
+	s6e63m0_22gamma_260cd,
+	s6e63m0_22gamma_280cd,
+	s6e63m0_22gamma_290cd,
+	s6e63m0_22gamma_300cd, 	//24  //auto level5 //manual max
 };                                             
 #else // Modify NTTS1                                         
 const unsigned short *p22Gamma_set[] = {        
@@ -2125,9 +2243,102 @@ const unsigned short s6e63m0_19gamma_30cd[] = {
 	ENDDEF, 0x0000                               
 }; 
 
+const unsigned short s6e63m0_19gamma_20cd[] = { 
+	//gamma set
+	0x0FA,
+
+	0x102,	
+                                                
+	0x118,
+	0x108,
+	0x124,
+	0x19D,
+	0x175,
+	0x17C,
+	0x1D0,
+	0x1D0,
+	0x1C6,
+	0x1CD,
+	0x1D1,
+	0x1C3,
+	0x1DE,
+	0x1E1,
+	0x1D8,
+	0x100,
+	0x14B,
+	0x100,
+	0x14A,
+	0x100,
+	0x164,
+
+	ENDDEF, 0x0000                               
+}; 
+
+const unsigned short s6e63m0_19gamma_10cd[] = { 
+	//gamma set
+	0x0FA,
+
+	0x102,	
+                                                
+	0x118,
+	0x108,
+	0x124,
+	0x19D,
+	0x175,
+	0x17C,
+	0x1D0,
+	0x1D0,
+	0x1C6,
+	0x1CD,
+	0x1D1,
+	0x1C3,
+	0x1DE,
+	0x1E1,
+	0x1D8,
+	0x100,
+	0x143,
+	0x100,
+	0x142,
+	0x100,
+	0x159,
+
+	ENDDEF, 0x0000                               
+}; 
+
+const unsigned short s6e63m0_19gamma_00cd[] = { 
+	//gamma set
+	0x0FA,
+
+	0x102,	
+                                                
+	0x118,
+	0x108,
+	0x124,
+	0x19D,
+	0x175,
+	0x17C,
+	0x1D0,
+	0x1D0,
+	0x1C6,
+	0x1CD,
+	0x1D1,
+	0x1C3,
+	0x1DE,
+	0x1E1,
+	0x1D8,
+	0x100,
+	0x13B,
+	0x100,
+	0x13A,
+	0x100,
+	0x14E,
+
+	ENDDEF, 0x0000                               
+}; 
+
 #if !defined(CONFIG_ARIES_NTT)  
 const unsigned short *p19Gamma_set[] = {        
-	s6e63m0_19gamma_30cd,//0                      
+	/*s6e63m0_19gamma_30cd,//0                      
 	//s6e63m0_19gamma_50cd,                         
 	s6e63m0_19gamma_40cd,                         
 	s6e63m0_19gamma_70cd,                         
@@ -2153,6 +2364,32 @@ const unsigned short *p19Gamma_set[] = {
 	s6e63m0_19gamma_280cd,                        
 	s6e63m0_19gamma_290cd,                        
 	s6e63m0_19gamma_300cd,//25                    
+	*/
+	s6e63m0_19gamma_00cd,	 //0                    
+	s6e63m0_19gamma_10cd,    //auto level1 //manual min
+	s6e63m0_19gamma_10cd,
+	s6e63m0_19gamma_20cd,
+	s6e63m0_19gamma_30cd,	
+	s6e63m0_19gamma_40cd,	//5 //auto level2
+	s6e63m0_19gamma_50cd,
+	s6e63m0_19gamma_60cd,
+	s6e63m0_19gamma_70cd,	//manual medium
+	s6e63m0_19gamma_80cd,	
+	s6e63m0_19gamma_90cd,	//10 //auto level3
+	s6e63m0_19gamma_100cd,
+	s6e63m0_19gamma_120cd,
+	s6e63m0_19gamma_140cd,	
+	s6e63m0_19gamma_160cd,	
+	s6e63m0_19gamma_180cd,	//15
+	s6e63m0_19gamma_200cd,  //auto level4
+	s6e63m0_19gamma_210cd,
+	s6e63m0_19gamma_220cd,	
+	s6e63m0_19gamma_230cd,	
+	s6e63m0_19gamma_240cd,	//20
+	s6e63m0_19gamma_260cd,
+	s6e63m0_19gamma_280cd,
+	s6e63m0_19gamma_290cd,
+	s6e63m0_19gamma_300cd, 	//24  //auto level5 //manual max
 }; 
 #else // Modify NTTS1
 const unsigned short *p19Gamma_set[] = {        

@@ -51,9 +51,11 @@ extern const unsigned short s6e63m0_22gamma_60cd[];
 extern const unsigned short s6e63m0_22gamma_50cd[];
 extern const unsigned short s6e63m0_22gamma_40cd[];
 extern const unsigned short s6e63m0_22gamma_30cd[];
-#if defined(CONFIG_ARIES_NTT) // Modify NTTS1
+//#if defined(CONFIG_ARIES_NTT) // Modify NTTS1
 extern const unsigned short s6e63m0_22gamma_20cd[];
-#endif
+extern const unsigned short s6e63m0_22gamma_10cd[];
+extern const unsigned short s6e63m0_22gamma_00cd[];
+//#endif
 
 extern const unsigned short s6e63m0_19gamma_300cd[];
 extern const unsigned short s6e63m0_19gamma_290cd[];
@@ -83,9 +85,11 @@ extern const unsigned short s6e63m0_19gamma_60cd[];
 extern const unsigned short s6e63m0_19gamma_50cd[];
 extern const unsigned short s6e63m0_19gamma_40cd[];
 extern const unsigned short s6e63m0_19gamma_30cd[];
-#if defined(CONFIG_ARIES_NTT) // Modify NTTS1
+//#if defined(CONFIG_ARIES_NTT) // Modify NTTS1
 extern const unsigned short s6e63m0_19gamma_20cd[];
-#endif
+extern const unsigned short s6e63m0_19gamma_10cd[];
+extern const unsigned short s6e63m0_19gamma_00cd[];
+//#endif
 
 #ifdef CONFIG_FB_S3C_TL2796_ACL
 extern const unsigned short acl_cutoff_off[];

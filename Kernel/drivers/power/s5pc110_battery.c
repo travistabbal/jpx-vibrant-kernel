@@ -73,7 +73,7 @@ static struct wake_lock wake_lock_for_dev;
 
 #define ADC_DATA_ARR_SIZE	6
 #define ADC_TOTAL_COUNT		10
-#define POLLING_INTERVAL	5000
+#define POLLING_INTERVAL	60000 //5000 //reduce polling frequency
 
 #define POLLING_INTERVAL_TEST	1000
 
