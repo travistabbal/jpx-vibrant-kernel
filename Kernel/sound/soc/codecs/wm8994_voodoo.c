@@ -24,7 +24,7 @@
 #include "wm8994_voodoo.h"
 
 #define SUBJECT "wm8994_voodoo.c"
-#define VOODOO_SOUND_VERSION 1
+#define VOODOO_SOUND_VERSION 2
 
 
 #ifdef CONFIG_SND_VOODOO_HP_LEVEL_CONTROL
@@ -33,7 +33,16 @@ unsigned short hprvol = CONFIG_SND_VOODOO_HP_LEVEL;
 bool hpvol_force = true;
 #endif
 
+#ifdef CONFIG_SND_VOODOO_FM
 bool fm_radio_headset_restore_bass = true;
+#endif
+
+#ifdef CONFIG_SND_VOODOO_RECORD_PRESETS
+unsigned short recording_preset = 1;
+#endif
+
+bool full_bitwidth = false;
+bool dac_osr128 = false;
 
 // keep here a pointer to the codec structure
 struct snd_soc_codec *codec_;
@@ -78,10 +87,10 @@ void update_fm_radio_headset_restore_bass(bool with_mute)
 	if (fm_radio_headset_restore_bass)
 	{
 		// disable Sidetone high-pass filter designed for voice and not FM radio
-		// 0x621 0x0000 SMbus_16inx_16dat     Write  0x34      * Sidetone(621H):          0000  ST_HPF_CUT=000, ST_HPF=0, ST2_SEL=0, ST1_SEL=0
+		// Sidetone(621H): 0000  ST_HPF_CUT=000, ST_HPF=0, ST2_SEL=0, ST1_SEL=0
 		wm8994_write(codec_, WM8994_SIDETONE, 0x0000);
 		// disable 4FS ultrasonic mode and restore the hi-fi <4Hz hi pass filter
-		// 0x510 0x1800 SMbus_16inx_16dat     Write  0x34      * AIF2 ADC Filters(510H):  1800  AIF2ADC_4FS=0, AIF2ADC_HPF_CUT=00, AIF2ADCL_HPF=1, AIF2ADCR_HPF=1
+		// AIF2 ADC Filters(510H): 1800 AIF2ADC_4FS=0, AIF2ADC_HPF_CUT=00, AIF2ADCL_HPF=1, AIF2ADCR_HPF=1
 		wm8994_write(codec_, WM8994_AIF2_ADC_FILTERS, 0x1800);
 	}
 	else
@@ -97,6 +106,97 @@ void update_fm_radio_headset_restore_bass(bool with_mute)
 }
 #endif
 
+
+#ifdef CONFIG_SND_VOODOO_RECORD_PRESETS
+void update_recording_preset()
+{
+	switch (recording_preset)
+	{
+		case 0:
+		{
+			// Original:
+			// IN1L_VOL1=11000 (+19.5 dB)
+			wm8994_write(codec_, WM8994_LEFT_LINE_INPUT_1_2_VOLUME, 0x0118);
+			// DRC disabled
+			wm8994_write(codec_, WM8994_AIF1_DRC1_1, 0x0080);
+			break;
+		}
+		case 2:
+		{
+			// High sensitivy: Original - 4.5 dB, IN1L_VOL1=10101 (+15 dB)
+			wm8994_write(codec_, WM8994_LEFT_LINE_INPUT_1_2_VOLUME, 0x0115);
+			// DRC Input: -6dB, Ouptut -3.75dB
+			//     Above knee 1/8, Below knee 1/2
+			//     Max gain 24 / Min gain -12
+			wm8994_write(codec_, WM8994_AIF1_DRC1_1, 0x009A);
+			wm8994_write(codec_, WM8994_AIF1_DRC1_2, 0x0426);
+			wm8994_write(codec_, WM8994_AIF1_DRC1_3, 0x0019);
+			wm8994_write(codec_, WM8994_AIF1_DRC1_4, 0x0105);
+			break;
+		}
+		case 3:
+		{
+			// Concert: Original - 36 dB IN1L_VOL1=00000 (-16.5 dB)
+			wm8994_write(codec_, WM8994_LEFT_LINE_INPUT_1_2_VOLUME, 0x0100);
+			// DRC Input: -4.5dB, Ouptut -6.75dB
+			//     Above knee 1/4, Below knee 1/2
+			//     Max gain 18 / Min gain -12
+			wm8994_write(codec_, WM8994_AIF1_DRC1_1, 0x009A);
+			wm8994_write(codec_, WM8994_AIF1_DRC1_2, 0x0845);
+			wm8994_write(codec_, WM8994_AIF1_DRC1_3, 0x0011);
+			wm8994_write(codec_, WM8994_AIF1_DRC1_4, 0x00C9);
+			break;
+		}
+		default:
+		{
+			// make sure recording_preset is the default: 4
+			recording_preset = 1;
+			// Balanced: Original - 16.5 dB, IN1L_VOL1=01101 (+3 dB)
+			wm8994_write(codec_, WM8994_LEFT_LINE_INPUT_1_2_VOLUME, 0x054D);
+			// DRC Input: -13.5dB, Ouptut -9dB
+			//     Above knee 1/8, Below knee 1/2
+			//     Max gain 12 / Min gain -12
+			wm8994_write(codec_, WM8994_AIF1_DRC1_1, 0x009A);
+			wm8994_write(codec_, WM8994_AIF1_DRC1_2, 0x0844);
+			wm8994_write(codec_, WM8994_AIF1_DRC1_3, 0x0019);
+			wm8994_write(codec_, WM8994_AIF1_DRC1_4, 0x024C);
+			break;
+		}
+	}
+}
+#endif
+
+void update_full_bitwidth(bool with_mute)
+{
+	if (with_mute)
+	{
+		wm8994_write(codec_, WM8994_AIF1_DAC1_FILTERS_1, 0x230);
+		msleep(180);
+	}
+
+	if (full_bitwidth == 1)
+	{
+		// +1.5dB SNR restoring the full DRC Gain
+		// DRC Input: -1.5dB, Ouptut 0dB
+		wm8994_write(codec_, WM8994_AIF1_DRC1_1, 0x0094);
+		wm8994_write(codec_, WM8994_AIF1_DRC1_4, 0x0040);
+	}
+	else
+		// disable DRC
+		wm8994_write(codec_, WM8994_AIF1_DRC1_1, 0x0098);
+		// un-mute
+
+	if (with_mute)
+		wm8994_write(codec_, WM8994_AIF1_DAC1_FILTERS_1, 0x030);
+}
+
+void update_dac_osr128()
+{
+	if (dac_osr128 == 1)
+		wm8994_write(codec_, WM8994_OVERSAMPLING, 0x0003);
+	else
+		wm8994_write(codec_, WM8994_OVERSAMPLING, 0);
+}
 
 /*
  *
@@ -123,6 +223,7 @@ static ssize_t headphone_amplifier_level_store(struct device *dev, struct device
 }
 #endif
 
+
 #ifdef CONFIG_SND_VOODOO_FM
 static ssize_t fm_radio_headset_restore_bass_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
@@ -144,6 +245,60 @@ static ssize_t fm_radio_headset_restore_bass_store(struct device *dev, struct de
 	return size;
 }
 #endif
+
+
+#ifdef CONFIG_SND_VOODOO_RECORD_PRESETS
+static ssize_t recording_preset_show(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf,"%d\n", recording_preset);
+}
+
+static ssize_t recording_preset_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t size)
+{
+	unsigned short preset_number;
+	if (sscanf(buf, "%hu", &preset_number) == 1)
+	{
+		recording_preset = preset_number;
+		update_recording_preset();
+	}
+	return size;
+}
+#endif
+
+
+static ssize_t full_bitwidth_show(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf,"%u\n",(full_bitwidth ? 1 : 0));
+}
+
+static ssize_t full_bitwidth_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t size)
+{
+	unsigned short state;
+	if (sscanf(buf, "%hu", &state) == 1)
+	{
+		full_bitwidth = state == 0 ? false : true;
+		update_full_bitwidth(true);
+	}
+	return size;
+}
+
+
+static ssize_t dac_osr128_show(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf,"%u\n",(dac_osr128 ? 1 : 0));
+}
+
+static ssize_t dac_osr128_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t size)
+{
+	unsigned short state;
+	if (sscanf(buf, "%hu", &state) == 1)
+	{
+		dac_osr128 = state == 0 ? false : true;
+		update_dac_osr128();
+	}
+	return size;
+}
+
 
 #ifdef CONFIG_SND_VOODOO_DEBUG
 static ssize_t show_wm8994_register_dump(struct device *dev, struct device_attribute *attr, char *buf)
@@ -229,6 +384,11 @@ static DEVICE_ATTR(headphone_amplifier_level, S_IRUGO | S_IWUGO , headphone_ampl
 #ifdef CONFIG_SND_VOODOO_FM
 static DEVICE_ATTR(fm_radio_headset_restore_bass, S_IRUGO | S_IWUGO , fm_radio_headset_restore_bass_show, fm_radio_headset_restore_bass_store);
 #endif
+#ifdef CONFIG_SND_VOODOO_RECORD_PRESETS
+static DEVICE_ATTR(recording_preset, S_IRUGO | S_IWUGO , recording_preset_show, recording_preset_store);
+#endif
+static DEVICE_ATTR(full_bitwidth, S_IRUGO | S_IWUGO , full_bitwidth_show, full_bitwidth_store);
+static DEVICE_ATTR(dac_osr128, S_IRUGO | S_IWUGO , dac_osr128_show, dac_osr128_store);
 #ifdef CONFIG_SND_VOODOO_DEBUG
 static DEVICE_ATTR(wm8994_register_dump, S_IRUGO , show_wm8994_register_dump, NULL);
 static DEVICE_ATTR(wm8994_write, S_IWUSR , NULL, store_wm8994_write);
@@ -242,6 +402,11 @@ static struct attribute *voodoo_sound_attributes[] = {
 #ifdef CONFIG_SND_VOODOO_FM
 		&dev_attr_fm_radio_headset_restore_bass.attr,
 #endif
+#ifdef CONFIG_SND_VOODOO_RECORD_PRESETS
+		&dev_attr_recording_preset.attr,
+#endif
+		&dev_attr_full_bitwidth.attr,
+		&dev_attr_dac_osr128.attr,
 #ifdef CONFIG_SND_VOODOO_DEBUG
 		&dev_attr_wm8994_register_dump.attr,
 		&dev_attr_wm8994_write.attr,
@@ -272,10 +437,23 @@ void voodoo_hook_fmradio_headset()
 	if (! fm_radio_headset_restore_bass)
 		return;
 
-	printk("Voodoo sound: correct FM radio sound output\n");
 	update_fm_radio_headset_restore_bass(false);
 }
 #endif
+
+
+#ifdef CONFIG_SND_VOODOO_RECORD_PRESETS
+void voodoo_hook_record_main_mic()
+{
+	update_recording_preset();
+}
+#endif
+
+void voodoo_hook_playback_headset()
+{
+	update_full_bitwidth(false);
+	update_dac_osr128();
+}
 
 
 unsigned int voodoo_hook_wm8994_write(struct snd_soc_codec *codec, unsigned int reg, unsigned int value)
@@ -292,7 +470,7 @@ unsigned int voodoo_hook_wm8994_write(struct snd_soc_codec *codec, unsigned int 
 	}
 #endif
 
-#ifdef CONFIG_SND_VOODOO_DEBUG
+#ifdef CONFIG_SND_VOODOO_DEBUG_LOG
 	// log every write to dmesg
 	DEBUG_LOG_ERR("register= [%X] value= [%X]", reg, value);
 #endif
