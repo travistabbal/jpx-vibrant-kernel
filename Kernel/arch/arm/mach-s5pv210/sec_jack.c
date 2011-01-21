@@ -174,7 +174,7 @@ static int jack_type_detect_change(struct work_struct *ignored)
 #if !defined(CONFIG_ARIES_NTT)
 			if(adc > 3400)
 #else
-			if( (adc > 3300 && adc <3400) || (adc >3600)) //ssong100911. °øÁ¤ Å×½ºÆ®¸ðµå¿¡¼­ EAR Loopback Fail ¹®Á¦.
+			if( (adc > 3300 && adc <3400) || (adc >3600)) //ssong100911. ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®ï¿½ï¿½å¿¡ï¿½ï¿½ EAR Loopback Fail ï¿½ï¿½ï¿½ï¿½.
 #endif
 			{
 				
@@ -222,7 +222,7 @@ static int jack_type_detect_change(struct work_struct *ignored)
 			else if(adc > 900)
 #endif
 #else				
-			else if(adc > 500 || (adc <= 3600 && adc >= 3400)) //ssong100911. °øÁ¤ Å×½ºÆ®¸ðµå¿¡¼­ EAR Loopback Fail ¹®Á¦.
+			else if(adc > 500 || (adc <= 3600 && adc >= 3400)) //ssong100911. ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®ï¿½ï¿½å¿¡ï¿½ï¿½ EAR Loopback Fail ï¿½ï¿½ï¿½ï¿½.
 #endif				
 			{
 				current_jack_type_status = SEC_HEADSET_4_POLE_DEVICE;
@@ -733,7 +733,7 @@ static int sec_jack_probe(struct platform_device *pdev)
 	set_irq_type(det_jack->eint, IRQ_TYPE_EDGE_BOTH);
 
 #if !defined(CONFIG_GALAXY_I897)
-	det_jack->low_active = 1;
+	det_jack->low_active = 0;
 #endif 
 
 	ret = request_irq(det_jack->eint, detect_irq_handler, IRQF_DISABLED, "sec_headset_detect", NULL);

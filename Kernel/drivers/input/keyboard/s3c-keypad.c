@@ -276,7 +276,7 @@ static irqreturn_t s3c_keygpio_vol_up26_isr(int irq, void *dev_id)
 
 	key_status = (readl(S5PV210_GPH3DAT)) & ((1 << 2));
 
-	INPUT_REPORT_KEY(dev, 42, key_status ? 0 : 1);
+	INPUT_REPORT_KEY(dev, 58, key_status ? 0 : 1);
 
 	printk(KERN_DEBUG "s3c_keygpio_vol_up26_isr key_status =%d,\n",
 	       key_status);
@@ -292,7 +292,7 @@ static irqreturn_t s3c_keygpio_vol_down_isr(int irq, void *dev_id)
 
 	key_status = (readl(S5PV210_GPH3DAT)) & (1 << 1);
 
-	INPUT_REPORT_KEY(dev, 58, key_status ? 0 : 1);
+	INPUT_REPORT_KEY(dev, 42, key_status ? 0 : 1);
 
 	printk(KERN_DEBUG "s3c_keygpio_vol_down_isr key_status =%d,\n",
 	       key_status);
