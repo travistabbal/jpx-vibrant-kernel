@@ -11,7 +11,7 @@
 
 //extern void s5pc110_lock_power_domain(unsigned int nToken);
 
-#define MAXIMUM_FREQ 1000000
+#define MAXIMUM_FREQ 1400000
 #define USE_FREQ_TABLE
 //#undef USE_DVS
 #define USE_DVS
@@ -37,7 +37,7 @@ enum perf_level {
 };
 
 enum freq_level_states {
-	LEV_1200MHZ,
+	LEV_1400MHZ,
 	LEV_1000MHZ,
 	LEV_800MHZ,
 	LEV_400MHZ,
@@ -86,6 +86,7 @@ void s5pc110_unlock_dvfs_high_level(unsigned int nToken);
  **/
 #define APLL_VAL_1664	(1<<31)|(417<<16)|(3<<8)|(0)
 #define APLL_VAL_1332	(1<<31)|(444<<16)|(4<<8)|(0)
+#define APLL_VAL_1200 (1<<31)|(150<<16)|(3<<8)|(1)
 #define APLL_VAL_1000	(1<<31)|(125<<16)|(3<<8)|(1)
 #define APLL_VAL_800	(1<<31)|(100<<16)|(3<<8)|(1)
 

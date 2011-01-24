@@ -29,7 +29,7 @@ loglevel 3
     insmod /lib/modules/vibrator.ko
 
 	# ko files for Fm radio
-	insmod /lib/modules/Si4709_driver.ko
+	#insmod /lib/modules/Si4709_driver.ko
 	
 #add booting sound property 
 	setprop audioflinger.bootsnd 1
@@ -243,7 +243,7 @@ loglevel 3
 
 # create data/gps for GPS demon
     chown root system /dev/s3c2410_serial1
-    chmod 664 /dev/s3c2410_serial1
+    chmod 660 /dev/s3c2410_serial1
     mkdir /data/gps 771 system system
     chown system system /data/gps
     chown root system /sys/class/gpio/gpio121/value
@@ -281,9 +281,10 @@ loglevel 3
     chmod 0777 /data/log
     chmod 0777 /data/anr	
     
+    chmod 0662 /dev/log/events
+    chmod 0662 /dev/log/system
     chmod 0662 /dev/log/radio
     chmod 0662 /dev/log/main
-    chmod 0662 /dev/log/event     
     	
 
     # create fota delta dir
@@ -323,7 +324,7 @@ loglevel 3
     insmod /lib/modules/bthid.ko
 
     # permissions for MTP device node
-    chmod 0777 /dev/usb_mtp_gadget
+    chmod 0660 /dev/usb_mtp_gadget
     
     #DRM directory creation
     mkdir /system/etc/security/drm 01777
@@ -348,8 +349,6 @@ loglevel 3
 	mkdir /data/data/.drm/.playready 0777
 
     mount rootfs rootfs / ro remount
-    chmod 0662 /dev/log/events
-    chmod 0662 /dev/log/system
 
 on boot
 # basic network init
@@ -411,8 +410,8 @@ on boot
 
     # Tweak background writeout
 	
-    #write /proc/sys/vm/dirty_expire_centisecs 800
-    #write /proc/sys/vm/dirty_background_ratio 2
+    write /proc/sys/vm/dirty_expire_centisecs 800
+    write /proc/sys/vm/dirty_background_ratio 2
 
     # Permissions for System Server and daemons.
     chown radio system /sys/android_power/state
@@ -457,16 +456,7 @@ on boot
     chown root radio /proc/cmdline
 
 #magnetic sensor yamaha
-    chown compass system /dev/i2c-12
-    chmod 0777 /dev/i2c-12
-    chown compass system /dev/i2c-5
-    chmod 0777 /dev/yamaha_compass
-    chown system system /dev/light
-    chmod 0777 /dev/light
-    chown system system /dev/proximity
-    chmod 0777 /dev/proximity
-    chmod 0777 /dev/accelerometer
-   chmod 0777 /dev/hac_miscdev
+  # chmod 0777 /dev/hac_miscdev
 
 
 # Define TCP buffer sizes for various networks
@@ -597,11 +587,11 @@ service DR-deamon /system/bin/drexe
 	
 service mobex-daemon /system/bin/npsmobex
 	user system
-	group system inet
+	group system inet log
 
 service glgps /system/bin/gpsd/glgps_samsungJupiter -c /system/etc/jupiter.xml
     user system
-    group system inet
+    group system inet log
 
 service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
     socket zygote stream 666
@@ -611,7 +601,7 @@ service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-sys
 
 service media /system/bin/mediaserver
     user media
-    group system audio camera graphics inet net_bt net_bt_admin net_raw sdcard_rw
+    group system audio camera graphics inet net_bt net_bt_admin net_raw sdcard_rw log
     ioprio rt 4
 
 #to prevent lockup issue during poweron/off test
@@ -721,7 +711,7 @@ service flash_recovery /system/etc/install-recovery.sh
 #magnetic sensor yamaha
 	service sensor-daemon /system/bin/sensorserver_yamaha
 	user compass
-	group system
+	group system log
 
 service racoon /system/bin/racoon
     socket racoon stream 600 system system
@@ -749,8 +739,8 @@ service immvibed /system/bin/immvibed
 
 
 service tvout /system/bin/tvoutserver
-user system
-group system
+	user system
+    group system log
 
 
 service dumpstate /system/bin/dumpstate -s
@@ -772,12 +762,6 @@ service RescueStarter /system/bin/RescueStarter
 service run_parts /voodoo/scripts/run-parts.sh /system/etc/init.d
   oneshot 
 
-
-service bootanim /system/bin/bootanimation
-			user graphics
-			group graphics
-			disabled
-			oneshot
 
 service bootanim /system/bin/bootanimation
 			user graphics

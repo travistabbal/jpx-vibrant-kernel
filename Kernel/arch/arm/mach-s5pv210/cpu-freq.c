@@ -194,8 +194,8 @@ static int get_dvfs_perf_level(enum freq_level_states freq_level, unsigned int *
 	struct cpufreq_frequency_table *freq_tab = s5pc110_freq_table[S5PC11X_FREQ_TAB];
 	switch(freq_level)
 	{
-	case LEV_1200MHZ:
-		freq = 1120 * 1000;
+	case LEV_1400MHZ:
+		freq = 1400 * 1000;
 		break;
 	case LEV_1000MHZ:
 		freq = 1000 * 1000;
