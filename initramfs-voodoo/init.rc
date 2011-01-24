@@ -456,7 +456,16 @@ on boot
     chown root radio /proc/cmdline
 
 #magnetic sensor yamaha
-  # chmod 0777 /dev/hac_miscdev
+   chown compass system /dev/i2c-12
+   chmod 0777 /dev/i2c-12
+   chown compass system /dev/i2c-5
+   chmod 0777 /dev/yamaha_compass
+   chown system system /dev/light
+   chmod 0777 /dev/light
+   chown system system /dev/proximity
+   chmod 0777 /dev/proximity
+   chmod 0777 /dev/accelerometer
+   chmod 0777 /dev/hac_miscdev
 
 
 # Define TCP buffer sizes for various networks
