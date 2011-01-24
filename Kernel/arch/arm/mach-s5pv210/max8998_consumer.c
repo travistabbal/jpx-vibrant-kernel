@@ -86,15 +86,15 @@ enum PMIC_VOLTAGE {
 static const unsigned int frequency_match_1GHZ[][4] = {
 /* frequency, Mathced VDD ARM voltage , Matched VDD INT*/
 #if 1
-        {1400000, 1300, 1100, 0},
-        {1360000, 1300, 1100, 0},
-        {1280000, 1300, 1100, 0},
-        {1200000, 1300, 1100, 0},
-        {1120000, 1300, 1100, 0},
-        {1000000, 1275, 1100, 0},
-        {800000, 1200, 1100, 1},
-        {400000, 1050, 1100, 2},
-        {200000, 950, 1100, 4},
+        {1400000, 1400, 1150, 0},
+        {1360000, 1400, 1150, 0},
+        {1280000, 1400, 1150, 0},
+        {1200000, 1300, 1150, 0},
+        {1120000, 1300, 1150, 0},
+        {1000000, 1300, 1150, 1},
+        {800000, 1300, 1150, 2},
+        {400000, 1050, 1150, 3},
+        {200000, 950, 1150, 4},
         {100000, 950, 1000, 5},
 #else //just for dvs test
         {1000000, 1250, 1100, 0},
@@ -138,22 +138,18 @@ static unsigned int s_arm_voltage=0, s_int_voltage=0;
 static const unsigned int dvs_volt_table_800MHZ[][3] = {
         {L0, DVSARM2, DVSINT1},
         {L1, DVSARM3, DVSINT1},
- //266       {L2, DVSARM3, DVSINT1},
+        {L2, DVSARM3, DVSINT1},
         {L2, DVSARM4, DVSINT1},
         {L3, DVSARM4, DVSINT2},
-//        {L4, DVSARM4, DVSINT2},
-//        {L5, DVSARM4, DVSINT2},
 };
 
 static const unsigned int dvs_volt_table_1GHZ[][3] = {
-        {L0, DVSARM1, DVSINT1},//DVSINT0
+        {L0, DVSARM1, DVSINT1},
         {L1, DVSARM1, DVSINT1},
         {L2, DVSARM2, DVSINT1},
- //266       {L3, DVSARM3, DVSINT1},
         {L3, DVSARM3, DVSINT1},
-        {L4, DVSARM4, DVSINT1},
+        {L4, DVSARM4, DVSINT2},
         {L5, DVSARM4, DVSINT2},
-//        {L6, DVSARM4, DVSINT2},
 };
 
 
@@ -163,12 +159,12 @@ const unsigned int (*dvs_volt_table[2])[3] = {
 };
 
 static const unsigned int dvs_arm_voltage_set[][2] = {
-	{DVSARM1, 1275},
-	{DVSARM2, 1200},
+	{DVSARM1, 1400},
+	{DVSARM2, 1300},
 	{DVSARM3, 1050},
 	{DVSARM4, 950},
-	{DVSINT1, 1100},
-	{DVSINT2, 1000},
+	{DVSINT1, 1150},
+	{DVSINT2, 1100},
 };
 #endif
 
@@ -438,7 +434,7 @@ void max8998_init(void)
 		//step_curr = L0;
 		step_curr = L2;
 		//set_voltage_dvs(L1); //switch to 800MHZ
-		set_voltage_dvs(L1); //switch to 800MHZ
+		set_voltage_dvs(L2); //switch to 800MHZ
 	}
 	if (!dvs_initilized) dvs_initilized=1;
 }

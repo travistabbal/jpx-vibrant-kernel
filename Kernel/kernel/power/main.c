@@ -155,7 +155,7 @@ static ssize_t dvfslock_ctrl(const char *buf, size_t count)
 	
 	if (dtime_msec  == 0) return -EINVAL;
 	if(dlevel) dlevel = LEV_800MHZ;
-	else dlevel = LEV_1000MHZ;
+	else dlevel = LEV_1400MHZ;
 	
 	printk("+++++DBG dvfs lock level=%d, time=%d, scanVal=%08x\n",dlevel,dtime_msec, gdDvfsctrl);
 	s5pc110_lock_dvfs_high_level(DVFS_LOCK_TOKEN_6, dlevel);
