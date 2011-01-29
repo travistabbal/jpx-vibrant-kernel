@@ -1,0 +1,14 @@
+--- Makefile	2010-12-20 12:00:48.000000000 +0800
++++ Makefile	2011-01-27 14:42:54.000000000 +0800
+@@ -181,8 +181,9 @@
+ # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
+ export KBUILD_BUILDHOST := $(SUBARCH)
+ ARCH		?= arm
+-CROSS_COMPILE	?= /opt/toolchains/arm-2009q3/bin/arm-none-linux-gnueabi-
+-
++#CROSS_COMPILE	?= /home/kernel/arm-2009q3/bin/arm-none-eabi-
++#CROSS_COMPILE	?= /home/kernel/arm-2010q1/bin/arm-none-eabi-
++CROSS_COMPILE	?= /home/kernel/arm-2010.09/bin/arm-none-eabi-
+ 
+ # Architecture as present in compile.h
+ UTS_MACHINE 	:= $(ARCH)

@@ -136,7 +136,11 @@ static int s3cfb_draw_logo(struct fb_info *fb)
 extern int get_boot_charger_info(void);
 
 #if defined(CONFIG_ARIES_EUR)
+#if defined(CONFIG_GALAXY_I897)
+#include "logo_rgb24_wvga_portrait_i897.h"
+#else
 #include "logo_rgb24_wvga_portrait.h"
+#endif
 #elif defined(CONFIG_ARIES_LATONA)
 #include "logo_rgb24_wvga_portrait_latona.h"
 #elif defined(CONFIG_ARIES_NTT)

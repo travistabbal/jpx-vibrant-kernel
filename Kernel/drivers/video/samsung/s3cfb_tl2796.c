@@ -121,7 +121,7 @@ static struct s5p_lcd lcd;
 #if !defined(CONFIG_ARIES_NTT)
 static const unsigned short *p22Gamma_set[] = {        
                       
-	s6e63m0_22gamma_30cd,//0                               
+/*	s6e63m0_22gamma_30cd,//0                               
 	s6e63m0_22gamma_40cd,                         
 	s6e63m0_22gamma_70cd,                         
 	s6e63m0_22gamma_90cd,                         
@@ -146,11 +146,37 @@ static const unsigned short *p22Gamma_set[] = {
 	s6e63m0_22gamma_280cd,                        
 	s6e63m0_22gamma_290cd,                        
 	s6e63m0_22gamma_300cd,//24                    
+	*/
+	s6e63m0_22gamma_00cd,	 //0                    
+	s6e63m0_22gamma_10cd,    //auto level1 //manual min
+	s6e63m0_22gamma_10cd,
+	s6e63m0_22gamma_20cd,
+	s6e63m0_22gamma_30cd,	
+	s6e63m0_22gamma_40cd,	//5 //auto level2
+	s6e63m0_22gamma_50cd,
+	s6e63m0_22gamma_60cd,
+	s6e63m0_22gamma_70cd,	//manual medium
+	s6e63m0_22gamma_80cd,	
+	s6e63m0_22gamma_90cd,	//10 //auto level3
+	s6e63m0_22gamma_100cd,
+	s6e63m0_22gamma_120cd,
+	s6e63m0_22gamma_140cd,	
+	s6e63m0_22gamma_160cd,	
+	s6e63m0_22gamma_180cd,	//15
+	s6e63m0_22gamma_200cd,  //auto level4
+	s6e63m0_22gamma_210cd,
+	s6e63m0_22gamma_220cd,	
+	s6e63m0_22gamma_230cd,	
+	s6e63m0_22gamma_240cd,	//20
+	s6e63m0_22gamma_260cd,
+	s6e63m0_22gamma_280cd,
+	s6e63m0_22gamma_290cd,
+	s6e63m0_22gamma_300cd, 	//24  //auto level5 //manual max
 };                                             
                                                
                                                 
 static const unsigned short *p19Gamma_set[] = {        
-	s6e63m0_19gamma_30cd,	//0
+	/*s6e63m0_19gamma_30cd,	//0
 	//s6e63m0_19gamma_50cd,                         
 	s6e63m0_19gamma_40cd,     
 	s6e63m0_19gamma_70cd,
@@ -177,6 +203,33 @@ static const unsigned short *p19Gamma_set[] = {
 	s6e63m0_19gamma_280cd,
 	s6e63m0_19gamma_290cd,
 	s6e63m0_19gamma_300cd,	//24
+	*/
+	s6e63m0_19gamma_00cd,	 //0                    
+	s6e63m0_19gamma_10cd,    //auto level1 //manual min
+	s6e63m0_19gamma_10cd,
+	s6e63m0_19gamma_20cd,
+	s6e63m0_19gamma_30cd,	
+	s6e63m0_19gamma_40cd,	//5 //auto level2
+	s6e63m0_19gamma_50cd,
+	s6e63m0_19gamma_60cd,
+	s6e63m0_19gamma_70cd,	//manual medium
+	s6e63m0_19gamma_80cd,	
+	s6e63m0_19gamma_90cd,	//10 //auto level3
+	s6e63m0_19gamma_100cd,
+	s6e63m0_19gamma_120cd,
+	s6e63m0_19gamma_140cd,	
+	s6e63m0_19gamma_160cd,	
+	s6e63m0_19gamma_180cd,	//15
+	s6e63m0_19gamma_200cd,  //auto level4
+	s6e63m0_19gamma_210cd,
+	s6e63m0_19gamma_220cd,	
+	s6e63m0_19gamma_230cd,	
+	s6e63m0_19gamma_240cd,	//20
+	s6e63m0_19gamma_260cd,
+	s6e63m0_19gamma_280cd,
+	s6e63m0_19gamma_290cd,
+	s6e63m0_19gamma_300cd, 	//24  //auto level5 //manual max
+
 }; 
 #else // Modify NTTS1
 static const unsigned short *p22Gamma_set[] = {        
@@ -872,6 +925,7 @@ static int get_gamma_value_from_bl(int bl)
 
 static void update_brightness(int gamma)
 {
+	//printk("update_brightness gamma: %d\n", gamma);//debug
 	if (on_19gamma)
 		s6e63m0_panel_send_sequence(p19Gamma_set[gamma]);
 	else

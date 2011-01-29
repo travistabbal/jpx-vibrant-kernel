@@ -346,7 +346,16 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
-		   -fno-delete-null-pointer-checks
+		   -fno-delete-null-pointer-checks \
+			 -mcpu=cortex-a8 \
+			 -mfpu=neon -mfloat-abi=softfp
+			 #-mthumb
+			 #-fno-gcse -fprefetch-loop-arrays \
+			 #--param l2-cache-size=512 \
+			 #--param l1-cache-size=64 \
+			 #--param simultaneous-prefetches=6 \
+			 #--param prefetch-latency=400 \
+			 #--param l1-cache-line-size=64
 KBUILD_AFLAGS   := -D__ASSEMBLY__
 
 # Read KERNELRELEASE from include/config/kernel.release (if it exists)
@@ -559,7 +568,7 @@ KBUILD_CFLAGS += $(call cc-option, -fno-inline-functions-called-once)
 endif
 
 # arch Makefile may override CC so keep this after arch Makefile is included
-NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include) -Dlinux
 CHECKFLAGS     += $(NOSTDINC_FLAGS)
 
 # warn about C99 declaration after statement
