@@ -192,15 +192,27 @@ void update_full_bitwidth(bool with_mute)
 		wm8994_write(codec_, WM8994_AIF1_DAC1_FILTERS_1, 0x030);
 }
 
-void update_dac_osr128()
+
+unsigned short dac_osr128_get_value(unsigned short val)
 {
 	if (dac_osr128 == 1)
-		wm8994_write(codec_, WM8994_OVERSAMPLING, 0x0003);
+		val |= WM8994_DAC_OSR128;
 	else
-		wm8994_write(codec_, WM8994_OVERSAMPLING, 0);
+		val &= ~WM8994_DAC_OSR128;
+	return val;
 }
 
-unsigned short tune_fll_value(unsigned short val)
+void update_dac_osr128()
+{
+	unsigned short val;
+	val = wm8994_read(codec_, WM8994_OVERSAMPLING);
+	val = dac_osr128_get_value(val);
+	bypass_write_hook = true;
+	wm8994_write(codec_, WM8994_OVERSAMPLING, val);
+	bypass_write_hook = false;
+}
+
+unsigned short fll_tuning_get_value(unsigned short val)
 {
 	val = (val >> WM8994_FLL1_GAIN_WIDTH << WM8994_FLL1_GAIN_WIDTH);
 	if (fll_tuning == 1)
@@ -211,24 +223,32 @@ unsigned short tune_fll_value(unsigned short val)
 void update_fll_tuning()
 {
 	unsigned short val;
-	bypass_write_hook = true;
 	val = wm8994_read(codec_, WM8994_FLL1_CONTROL_4);
-	val = tune_fll_value(val);
+	val = fll_tuning_get_value(val);
+	bypass_write_hook = true;
 	wm8994_write(codec_, WM8994_FLL1_CONTROL_4, val);
 	bypass_write_hook = false;
 }
 
+
+unsigned short mono_downmix_get_value(unsigned short val)
+{
+	if (mono_downmix)
+		val |= WM8994_AIF1DAC1_MONO;
+	else
+		val &= ~WM8994_AIF1DAC1_MONO;
+	return val;
+}
+
+
 void update_mono_downmix()
 {
 	unsigned short val;
-	if (mono_downmix)
-	{
-		val = wm8994_read(codec_, WM8994_AIF1_DAC1_FILTERS_1);
-		val |= 0x80;
-		wm8994_write(codec_, WM8994_AIF1_DAC1_FILTERS_1, val);
-	}
-	else
-		wm8994_write(codec_, WM8994_AIF1_DAC1_FILTERS_1, 0x0);
+	val = wm8994_read(codec_, WM8994_AIF1_DAC1_FILTERS_1);
+
+	bypass_write_hook = true;
+	wm8994_write(codec_, WM8994_AIF1_DAC1_FILTERS_1, val);
+	bypass_write_hook = false;
 }
 
 /*
@@ -521,26 +541,28 @@ void voodoo_hook_record_main_mic()
 void voodoo_hook_playback_headset()
 {
 	update_full_bitwidth(false);
-	update_dac_osr128();
-	update_mono_downmix();
 }
 
 
 unsigned int voodoo_hook_wm8994_write(struct snd_soc_codec *codec, unsigned int reg, unsigned int value)
 {
 	// modify some registers before those being written to the codec
-#ifdef CONFIG_SND_VOODOO_HP_LEVEL_CONTROL
-	// sniff headphone amplifier level changes and apply our level instead
+
 	if (! bypass_write_hook)
 	{
+#ifdef CONFIG_SND_VOODOO_HP_LEVEL_CONTROL
 		if (reg == WM8994_LEFT_OUTPUT_VOLUME)
 			value = (WM8994_HPOUT1_VU | WM8994_HPOUT1L_MUTE_N | hplvol);
 		if (reg == WM8994_RIGHT_OUTPUT_VOLUME)
 			value = (WM8994_HPOUT1_VU | WM8994_HPOUT1R_MUTE_N | hprvol);
-		if (reg == WM8994_FLL1_CONTROL_4)
-			value = tune_fll_value(value);
-	}
 #endif
+		if (reg == WM8994_OVERSAMPLING)
+			value = dac_osr128_get_value(value);
+		if (reg == WM8994_FLL1_CONTROL_4)
+			value = fll_tuning_get_value(value);
+		if (reg == WM8994_AIF1_DAC1_FILTERS_1)
+			value = mono_downmix_get_value(value);
+	}
 
 #ifdef CONFIG_SND_VOODOO_DEBUG_LOG
 	// log every write to dmesg
