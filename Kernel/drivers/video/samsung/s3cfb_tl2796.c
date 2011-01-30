@@ -320,7 +320,7 @@ static struct s3cfb_lcd s6e63m0 = {
 	.p_height = 86,
 	.bpp = 24,
 #if defined(CONFIG_ARIES_LATONA)
-	.freq = 60,  // default : Sony Panel
+	.freq = 72,  // default : Sony Panel
 	.timing = {
 		.h_fp = 10, // 16,
 		.h_bp = 20, // 16,
@@ -332,7 +332,7 @@ static struct s3cfb_lcd s6e63m0 = {
 		.v_sw = 2,
 	},
 #else
-	.freq = 60,
+	.freq = 72,
 	.timing = {
 		.h_fp = 16,
 		.h_bp = 16,
