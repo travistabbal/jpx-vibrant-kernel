@@ -127,14 +127,24 @@ void update_fm_radio_headset_normalize_gain()
 	if (fm_radio_headset_normalize_gain)
 	{
 		// Bumped volume, change with Zero Cross
-		wm8994_write(codec_, WM8994_LEFT_LINE_INPUT_3_4_VOLUME, 0x4F);
-		wm8994_write(codec_, WM8994_RIGHT_LINE_INPUT_3_4_VOLUME, 0x14F);
+		wm8994_write(codec_, WM8994_LEFT_LINE_INPUT_3_4_VOLUME, 0x52);
+		wm8994_write(codec_, WM8994_RIGHT_LINE_INPUT_3_4_VOLUME, 0x152);
+		wm8994_write(codec_, WM8994_AIF2_DRC_2, 0x0840);
+		wm8994_write(codec_, WM8994_AIF2_DRC_3, 0x2408);
+		wm8994_write(codec_, WM8994_AIF2_DRC_4, 0x0082);
+		wm8994_write(codec_, WM8994_AIF2_DRC_5, 0x0100);
+		wm8994_write(codec_, WM8994_AIF2_DRC_1, 0x019C);
 	}
 	else
 	{
 		// Original volume, change with Zero Cross
 		wm8994_write(codec_, WM8994_LEFT_LINE_INPUT_3_4_VOLUME, 0x4B);
 		wm8994_write(codec_, WM8994_RIGHT_LINE_INPUT_3_4_VOLUME, 0x14B);
+		wm8994_write(codec_, WM8994_AIF2_DRC_2, 0x0840);
+		wm8994_write(codec_, WM8994_AIF2_DRC_3, 0x2400);
+		wm8994_write(codec_, WM8994_AIF2_DRC_4, 0x0000);
+		wm8994_write(codec_, WM8994_AIF2_DRC_5, 0x0000);
+		wm8994_write(codec_, WM8994_AIF2_DRC_1, 0x019C);
 	}
 }
 #endif
