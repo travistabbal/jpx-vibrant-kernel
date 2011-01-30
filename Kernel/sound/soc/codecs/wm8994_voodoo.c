@@ -546,15 +546,19 @@ void voodoo_hook_playback_headset()
 
 unsigned int voodoo_hook_wm8994_write(struct snd_soc_codec *codec, unsigned int reg, unsigned int value)
 {
+	struct wm8994_priv *wm8994 = codec->private_data;
 	// modify some registers before those being written to the codec
 
 	if (! bypass_write_hook)
 	{
 #ifdef CONFIG_SND_VOODOO_HP_LEVEL_CONTROL
-		if (reg == WM8994_LEFT_OUTPUT_VOLUME)
-			value = (WM8994_HPOUT1_VU | WM8994_HPOUT1L_MUTE_N | hplvol);
-		if (reg == WM8994_RIGHT_OUTPUT_VOLUME)
-			value = (WM8994_HPOUT1_VU | WM8994_HPOUT1R_MUTE_N | hprvol);
+		if (wm8994->cur_path == HP || wm8994->fmradio_path == FMR_HP)
+		{
+			if (reg == WM8994_LEFT_OUTPUT_VOLUME)
+				value = (WM8994_HPOUT1_VU | WM8994_HPOUT1L_MUTE_N | hplvol);
+			if (reg == WM8994_RIGHT_OUTPUT_VOLUME)
+				value = (WM8994_HPOUT1_VU | WM8994_HPOUT1R_MUTE_N | hprvol);
+		}
 #endif
 		if (reg == WM8994_OVERSAMPLING)
 			value = dac_osr128_get_value(value);
@@ -566,7 +570,10 @@ unsigned int voodoo_hook_wm8994_write(struct snd_soc_codec *codec, unsigned int 
 
 #ifdef CONFIG_SND_VOODOO_DEBUG_LOG
 	// log every write to dmesg
-	DEBUG_LOG_ERR("register= [%X] value= [%X]", reg, value);
+	printk("Voodoo sound: wm8994_write register= [%X] value= [%X]\n", reg, value);
+	if (reg == WM8994_LEFT_OUTPUT_VOLUME || reg == WM8994_RIGHT_OUTPUT_VOLUME)
+	printk("Voodoo sound: cur_path=%i, rec_path=%i, fmradio_path=%i, fmr_mix_path=%i, power_state=%i, recognition_active=%i, ringtone_active=%i\n",
+		wm8994->cur_path, wm8994->rec_path, wm8994->fmradio_path, wm8994->fmr_mix_path, wm8994->power_state, wm8994->recognition_active, wm8994->ringtone_active);
 #endif
 	return value;
 }
