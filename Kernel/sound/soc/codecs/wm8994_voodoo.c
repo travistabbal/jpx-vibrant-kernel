@@ -24,7 +24,7 @@
 #include "wm8994_voodoo.h"
 
 #define SUBJECT "wm8994_voodoo.c"
-#define VOODOO_SOUND_VERSION 3
+#define VOODOO_SOUND_VERSION 4
 
 bool bypass_write_hook = false;
 
