@@ -65,7 +65,7 @@ static int bat_temper_state = 0;
 static struct wake_lock wake_lock_for_dev;
 #endif /* __TEST_DEVICE_DRIVER__ */
 
-
+#define __CHECK_CHG_CURRENT__ 
 #define LPM_MODE
 
 #define TRUE		1
@@ -1134,6 +1134,7 @@ static void check_chg_current(struct power_supply *bat_ps)
 
 	chg_current = s3c_bat_get_adc_data(S3C_ADC_CHG_CURRENT);
 	s3c_bat_info.bat_info.batt_current = chg_current;
+	/*
 	if (chg_current <= CURRENT_OF_FULL_CHG)
 	{
 		cnt++;
@@ -1150,6 +1151,7 @@ static void check_chg_current(struct power_supply *bat_ps)
 	{
 		cnt = 0;
 	}
+	*/
 }
 #endif /* __CHECK_CHG_CURRENT__ */
 
